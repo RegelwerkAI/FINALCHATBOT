@@ -1,0 +1,20 @@
+name: Täglicher Fly.io Deploy
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Täglich um 06:00 UTC (08:00 deutsche Zeit)
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Fly.io CLI installieren
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Fly App deployen
+        run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
