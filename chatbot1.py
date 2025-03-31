@@ -128,10 +128,12 @@ def send_newsletter(summary, recipients, language):
     msg.attach(MIMEText(html_content, "html"))
 
     try:
+        print("🔐 Verbinde mit SMTP:", SMTP_SERVER, SMTP_PORT)
         server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
         server.starttls()
         server.login(EMAIL_ACCOUNT, EMAIL_PASSWORD)
         server.sendmail(EMAIL_ACCOUNT, recipients, msg.as_string())
+        print(f"✅ Mail erfolgreich verschickt an {recipients}")
         server.quit()
         print(f"✅ Cyber-Newsletter ({language}) versendet!")
     except Exception as e:
@@ -139,10 +141,16 @@ def send_newsletter(summary, recipients, language):
 
 if __name__ == "__main__":
     print("🚀 Starte tägliche Cybersecurity-Analyse...")
+
     emails = get_cyber_emails()
+    print("📥 Eingegangene Mails:", emails[:500])
 
     summary_de = summarize_content(emails, "de")
+    print("📝 Deutsche Zusammenfassung:\n", summary_de)
+
     summary_en = summarize_content(emails, "en")
+    print("📝 Englische Zusammenfassung:\n", summary_en)
 
     send_newsletter(summary_de, RECIPIENTS_GERMAN, "de")
+    print(f"📤 Bereite Versand vor ")
     send_newsletter(summary_en, RECIPIENTS_ENGLISH, "en")
