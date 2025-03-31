@@ -10,6 +10,8 @@ import re
 from dotenv import load_dotenv
 from pathlib import Path
 
+print("📬 Starte get_cyber_emails...")
+
 # **E-Mail- & API-Zugangsdaten laden**
 env_path = Path(__file__).resolve().parent / "safedaten.env"
 load_dotenv(dotenv_path=env_path)
@@ -44,6 +46,7 @@ FILTERED_SENDERS = [
 ]
 
 def get_cyber_emails():
+    print("✅ Login erfolgreich.")
     try:
         mail = imaplib.IMAP4_SSL(IMAP_SERVER)
         mail.login(EMAIL_ACCOUNT, EMAIL_PASSWORD)
