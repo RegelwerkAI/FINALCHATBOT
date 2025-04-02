@@ -10,6 +10,10 @@ import re
 from dotenv import load_dotenv
 from pathlib import Path
 
+print("Aktueller Pfad:", Path(__file__).resolve().parent)
+print("ENV-Datei vorhanden:", os.path.exists(env_path))
+
+
 print("📬 Starte get_cyber_emails...")
 
 # **E-Mail- & API-Zugangsdaten laden**
