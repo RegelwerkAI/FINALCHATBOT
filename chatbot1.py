@@ -7,48 +7,39 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
 import re
-from dotenv import load_dotenv
 from pathlib import Path
 from datetime import datetime
 
-import os
-
+# Zugangsdaten aus Fly.io Secrets laden
 gemini_key = os.getenv("GEMINI_KEY")
 email_user = os.getenv("EMAIL")
 email_pass = os.getenv("EMAIL_PASS")
 
-print("Gemini-Key:", gemini_key[:5] + "...")
+EMAIL_ACCOUNT = email_user
+EMAIL_PASSWORD = email_pass
+GEMINI_API_KEY = gemini_key
 
+# Optional: Lokaler Fallback bei fehlenden Secrets (nur für lokale Tests)
+if not GEMINI_API_KEY:
+    from dotenv import load_dotenv
+    load_dotenv()
+    EMAIL_ACCOUNT = os.getenv("EMAIL")
+    EMAIL_PASSWORD = os.getenv("EMAIL_PASS")
+    GEMINI_API_KEY = os.getenv("GEMINI_KEY")
+
+# DEBUG-Ausgaben
+print("Gemini-Key:", GEMINI_API_KEY[:5] + "..." if GEMINI_API_KEY else "NICHT VORHANDEN")
 print("💡 Bot wurde gestartet am", datetime.now())
-
-
-env_path = Path(__file__).resolve().parent / "safedaten.env"
-print("Aktueller Pfad:", Path(__file__).resolve().parent)
-print("ENV-Datei vorhanden:", os.path.exists(env_path))
-
-
-print("📬 Starte get_cyber_emails...")
-
-# **E-Mail- & API-Zugangsdaten laden**
-
-load_dotenv(dotenv_path=env_path)
-
-EMAIL_ACCOUNT = os.getenv("EMAIL_ACCOUNT")
-EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-
-# **DEBUGG**
 print("EMAIL_ACCOUNT:", EMAIL_ACCOUNT)
-print("EMAIL_PASSWORD:", EMAIL_PASSWORD)
-print("GEMINI_API_KEY:", GEMINI_API_KEY)
 
 if not EMAIL_ACCOUNT or not EMAIL_PASSWORD or not GEMINI_API_KEY:
     print("❌ Fehler: Zugangsdaten oder API-Key nicht geladen.")
     exit()
 
-# **Google Gemini API konfigurieren**
+# Google Gemini API konfigurieren
 genai.configure(api_key=GEMINI_API_KEY)
 
+# Mailserver-Infos
 IMAP_SERVER = "imap.ionos.de"
 SMTP_SERVER = "smtp.ionos.de"
 SMTP_PORT = 587
@@ -63,11 +54,12 @@ FILTERED_SENDERS = [
 ]
 
 def get_cyber_emails():
-    print("✅ Login erfolgreich.")
+    print("📬 Starte get_cyber_emails...")
     try:
         mail = imaplib.IMAP4_SSL(IMAP_SERVER)
         mail.login(EMAIL_ACCOUNT, EMAIL_PASSWORD)
         mail.select("inbox")
+        print("✅ Login erfolgreich.")
     except imaplib.IMAP4.error:
         print("❌ Login fehlgeschlagen!")
         exit()
@@ -129,7 +121,7 @@ def send_newsletter(summary, recipients, language):
     msg["To"] = ", ".join(recipients)
     msg["Subject"] = subject
 
-    html_summary = summary.replace("\n", "<br>")  # FIXED: vorher ausgelagert
+    html_summary = summary.replace("\n", "<br>")
 
     html_content = f"""
     <html>
@@ -171,6 +163,6 @@ if __name__ == "__main__":
     summary_en = summarize_content(emails, "en")
     print("📝 Englische Zusammenfassung:\n", summary_en)
 
-    send_newsletter(summary_de, RECIPIENTS_GERMAN, "de")
     print(f"📤 Bereite Versand vor ")
+    send_newsletter(summary_de, RECIPIENTS_GERMAN, "de")
     send_newsletter(summary_en, RECIPIENTS_ENGLISH, "en")
