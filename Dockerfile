@@ -6,4 +6,5 @@ COPY . /app
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["python", "chatbot1.py"]
+CMD ["sleep", "3600"]
+

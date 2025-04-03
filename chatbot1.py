@@ -9,6 +9,8 @@ import os
 import re
 from dotenv import load_dotenv
 from pathlib import Path
+from datetime import datetime
+print("💡 Bot wurde gestartet am", datetime.now())
 
 
 env_path = Path(__file__).resolve().parent / "safedaten.env"
