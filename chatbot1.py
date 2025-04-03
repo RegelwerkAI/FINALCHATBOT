@@ -10,6 +10,15 @@ import re
 from dotenv import load_dotenv
 from pathlib import Path
 from datetime import datetime
+
+import os
+
+gemini_key = os.getenv("GEMINI_KEY")
+email_user = os.getenv("EMAIL")
+email_pass = os.getenv("EMAIL_PASS")
+
+print("Gemini-Key:", gemini_key[:5] + "...")
+
 print("💡 Bot wurde gestartet am", datetime.now())
 
 
