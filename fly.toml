@@ -1,24 +1,17 @@
-# fly.toml file generated for finalchatbot
-
 app = "finalchatbot"
 primary_region = "fra"
 
 [build]
 
 [http_service]
-internal_port = 8080
-force_https = true
-auto_stop_machines = false      # Maschine immer aktiv
-auto_start_machines = true
-min_machines_running = 1        # Mindestens 1 Instanz
-processes = ["app"]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
 
 [vm]
-memory = "1gb"
-cpu_kind = "shared"
-cpus = 1
-
-[checks.cronjob]
-  type = "cron"
-  schedule = "0 9 * * *"
-  command = "python chatbot1.py"
+  memory = "1gb"
+  cpu_kind = "shared"
+  cpus = 1
