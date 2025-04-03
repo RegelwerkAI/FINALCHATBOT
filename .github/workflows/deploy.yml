@@ -2,7 +2,9 @@ name: Täglicher Fly.io Deploy
 
 on:
   schedule:
-    - cron: '0 9 * * *'  # 9:00 UTC = 11:00 Deutschland
+  
+    - cron: '*/5 * * * *'  # alle 5 Minuten
+
   workflow_dispatch:
 
 jobs:
